@@ -36,7 +36,7 @@ class Config(SafeConfigParser): #{{{1
     def __init__(self, defaults=None, main=None, encoding=None):
         SafeConfigParser.__init__(self, defaults)
         self.encoding = encoding or ENCODING
-        self.main = main or 'main'
+        self.main = main or 'app:main'
 
     def encode(self, value):
         return encode(value, self.encoding)
