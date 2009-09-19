@@ -5,7 +5,7 @@ from glob import glob
 
 setup(
         name='ScriptUtils',
-        version='0.4.1',
+        version='0.4.2',
         description='Various small utilities for use in other scripts.',
         author='Jeremy Cantrell',
         author_email='jmcantrell@gmail.com',

@@ -31,7 +31,7 @@ class ConfigDialect(csv.Dialect): #{{{1
 
 
 
-class Config(SafeConfigParser): #{{{1
+class Config(object, SafeConfigParser): #{{{1
 
     def __init__(self, defaults=None, main=None, encoding=None):
         SafeConfigParser.__init__(self, defaults)
