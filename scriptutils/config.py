@@ -46,55 +46,55 @@ class Config(object, SafeConfigParser): #{{{1
     def defaults(self): #{{{2
         defaults = {}
         for k, v in SafeConfigParser.defaults(self):
-            defaults[self.decode(k)] = self.decode(v)
+            defaults[Config.decode(self, k)] = Config.decode(self, v)
         return defaults
 
     def add_section(self, section): #{{{2
-        SafeConfigParser.add_section(self, self.encode(section))
+        SafeConfigParser.add_section(self, Config.encode(self, section))
 
     def has_section(self, section): #{{{2
-        return SafeConfigParser.has_section(self, self.encode(section))
+        return SafeConfigParser.has_section(self, Config.encode(self, section))
 
     def has_option(self, section, option): #{{{2
-        return SafeConfigParser.has_option(self, self.encode(section), self.encode(option))
+        return SafeConfigParser.has_option(self, Config.encode(self, section), Config.encode(self, option))
 
     def options(self, section): #{{{2
-        return [self.decode(o) for o in SafeConfigParser.options(self, self.encode(section))]
+        return [Config.decode(self, o) for o in SafeConfigParser.options(self, Config.encode(self, section))]
 
     def set(self, section, option, value): #{{{2
-        section = self.encode(section)
-        value = self.encode(value)
+        section = Config.encode(self, section)
+        value = Config.encode(self, value)
         if is_list(value): value = join(value, self.encoding)
-        if not self.has_section(section): self.add_section(section)
+        if not Config.has_section(self, section): Config.add_section(self, section)
         SafeConfigParser.set(self, section, option, value)
 
     def get(self, section, option, default=None): #{{{2
-        section = self.encode(section)
-        option = self.encode(option)
-        if not self.has_option(section, option): return default
-        return self.decode(SafeConfigParser.get(self, section, option))
+        section = Config.encode(self, section)
+        option = Config.encode(self, option)
+        if not Config.has_option(self, section, option): return default
+        return Config.decode(self, SafeConfigParser.get(self, section, option))
 
     def getint(self, section, option, default=None): #{{{2
-        section = self.encode(section)
-        option = self.encode(option)
-        if not self.has_option(section, option): return default
+        section = Config.encode(self, section)
+        option = Config.encode(self, option)
+        if not Config.has_option(self, section, option): return default
         return SafeConfigParser.getint(self, section, option)
 
     def getboolean(self, section, option, default=None): #{{{2
-        section = self.encode(section)
-        option = self.encode(option)
-        if not self.has_option(section, option): return default
+        section = Config.encode(self, section)
+        option = Config.encode(self, option)
+        if not Config.has_option(self, section, option): return default
         return SafeConfigParser.getboolean(self, section, option)
 
     def getfloat(self, section, option, default=None): #{{{2
-        section = self.encode(section)
-        option = self.encode(option)
-        if not self.has_option(section, option): return default
+        section = Config.encode(self, section)
+        option = Config.encode(self, option)
+        if not Config.has_option(self, section, option): return default
         return SafeConfigParser.getfloat(self, section, option)
 
     def getlist(self, section, option, default=None, convert=None): #{{{2
-        if not self.has_option(section, option): return default
-        values = split(self.get(section, option), self.encoding)
+        if not Config.has_option(self, section, option): return default
+        values = split(Config.get(self, section, option), self.encoding)
         if convert: return [convert(v) for v in values]
         return values
 
@@ -103,12 +103,12 @@ class Config(object, SafeConfigParser): #{{{1
             if not isinstance(options, dict):
                 raise ConfigSectionError("Invalid section '%s'" % section)
             for option, value in options.iteritems():
-                self.set(section, option, value)
+                Config.set(self, section, option, value)
 
     def items(self, section): #{{{2
         items = []
         for option in self.options(section):
-            items.append((option, self.get(section, option)))
+            items.append((option, Config.get(self, section, option)))
         return items
 
 
@@ -120,12 +120,12 @@ class SingleConfig(Config): #{{{1
         Config.__init__(self, *args, **kwargs)
         self.filename = filename
         self.directory = os.path.dirname(self.filename)
-        self.update(self.base)
+        Config.update(self, self.base)
         self.load()
 
     def load(self): #{{{2
         if os.path.isfile(self.filename):
-            self.read(self.filename)
+            SafeConfigParser.read(self, self.filename)
         else:
             self.write()
 
@@ -133,40 +133,43 @@ class SingleConfig(Config): #{{{1
         directory = os.path.dirname(self.filename)
         if not os.path.isdir(directory): os.makedirs(directory)
         Config.write(self, open(self.filename, 'w'))
-class SimpleConfig(Config): #{{{1
+
+
+
+class SimpleConfig(SingleConfig): #{{{1
 
     def __init__(self, filename, *args, **kwargs): #{{{2
         self.main = kwargs.pop('main', 'app:main')
         kwargs['base'] = {self.main: kwargs.pop('base', {})}
-        Config.__init__(self, *args, **kwargs)
+        SingleConfig.__init__(self, filename, *args, **kwargs)
 
     def has_option(self, option): #{{{2
-        return Config.has_option(self, self.main, option)
+        return SingleConfig.has_option(self, self.main, option)
 
     def options(self): #{{{2
-        return Config.options(self, self.main)
+        return SingleConfig.options(self, self.main)
 
-    def set(self, *args, **kwargs): #{{{2
-        Config.set(self, self.main, *args, **kwargs)
+    def set(self, option, value): #{{{2
+        SingleConfig.set(self, self.main, option, value)
 
-    def get(self, *args, **kwargs): #{{{2
-        return Config.get(self, self.main, *args, **kwargs)
+    def get(self, option, default=None): #{{{2
+        return SingleConfig.get(self, self.main, option, default)
 
-    def getint(self, *args, **kwargs): #{{{2
-        return Config.getint(self, self.main, *args, **kwargs)
+    def getint(self, option, default=None): #{{{2
+        return SingleConfig.getint(self, self.main, option, default)
 
-    def getboolean(self, *args, **kwargs): #{{{2
-        return Config.getboolean(self, self.main, *args, **kwargs)
+    def getboolean(self, option, default=None): #{{{2
+        return SingleConfig.getboolean(self, self.main, option, default)
 
-    def getfloat(self, *args, **kwargs): #{{{2
-        return Config.getfloat(self, self.main, *args, **kwargs)
+    def getfloat(self, option, default=None): #{{{2
+        return SingleConfig.getfloat(self, self.main, option, default)
 
-    def getlist(self, *args, **kwargs): #{{{2
-        return Config.getlist(self, self.main, *args, **kwargs)
+    def getlist(self, option, default=None, convert=None): #{{{2
+        return SingleConfig.getlist(self, self.main, option, default, convert)
 
     def update(self, items): #{{{2
-        Config.update(self, {self.main: items})
+        SingleConfig.update(self, {self.main: items})
 
     def items(self): #{{{2
-        return Config.items(self, self.main)
+        return SingleConfig.items(self, self.main)
 
