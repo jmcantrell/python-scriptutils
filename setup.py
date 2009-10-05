@@ -10,7 +10,7 @@ setup(
         author='Jeremy Cantrell',
         author_email='jmcantrell@gmail.com',
         classifiers=[
-            'Development Status :: 3 - Alpha',
+            'Development Status :: 4 - Beta',
             'Environment :: Console',
             'Intended Audience :: Developers',
             'License :: OSI Approved :: GNU General Public License (GPL)',
@@ -22,6 +22,6 @@ setup(
             'scriptutils',
             ],
         install_requires=[
-            'UnicodeUtils>=0.2',
+            'UnicodeUtils',
             ],
         )
