@@ -67,21 +67,24 @@ class Config(object): #{{{1
     def readfp(self, fp, filename=None): #{{{2
         self.parser.readfp(fp, filename)
 
-    def get(self, section, option, default=None, getter=None): #{{{2
+    def getraw(self, section, option, default=None, getter=None): #{{{2
         section = self.encode(section)
         option = self.encode(option)
         if not getter: getter = self.parser.get
         if not self.has_option(section, option): return default
-        return self.decode(getter(section, option))
+        return getter(section, option)
+
+    def get(self, section, option, default=None): #{{{2
+        return self.decode(self.getraw(section, option, default))
 
     def getint(self, section, option, default=None): #{{{2
         return self.get(section, option, default, self.parser.getint)
 
     def getboolean(self, section, option, default=None): #{{{2
-        return self.get(section, option, default, self.parser.getboolean)
+        return self.getraw(section, option, default, self.parser.getboolean)
 
     def getfloat(self, section, option, default=None): #{{{2
-        return self.get(section, option, default, self.parser.getfloat)
+        return self.getraw(section, option, default, self.parser.getfloat)
 
     def getlist(self, section, option, default=None, convert=None): #{{{2
         if not self.has_option(section, option): return default
@@ -145,7 +148,11 @@ class SimpleConfig(object): #{{{1
 
     def __init__(self, filename, base=None, main=None, **kwargs): #{{{2
         self.main = main or 'app:main'
-        self.config = SingleConfig(filename, base={self.main: base or {}}, **kwargs)
+        self.base = base or {}
+        self.config = SingleConfig(filename, base={self.main: self.base}, **kwargs)
+        self.filename = self.config.filename
+        self.directory = self.config.directory
+        self.encoding = self.config.encoding
 
     def encode(self, value): #{{{2
         return self.config.encode(value)
