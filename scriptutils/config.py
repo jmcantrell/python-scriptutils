@@ -1,4 +1,4 @@
-import os, os.path, csv
+import os, csv
 from StringIO import StringIO
 from unicodeutils import encode, decode, is_list
 from ConfigParser import SafeConfigParser
@@ -86,7 +86,7 @@ class Config(object): #{{{2
         return self.decode(self.getraw(section, option, default))
 
     def getint(self, section, option, default=None):
-        return self.get(section, option, default, self.parser.getint)
+        return self.getraw(section, option, default, self.parser.getint)
 
     def getboolean(self, section, option, default=None):
         return self.getraw(section, option, default, self.parser.getboolean)
@@ -146,7 +146,8 @@ class SingleConfig(Config): #{{{2
 
     def write(self, fo=None):
         if not fo:
-            if not os.path.isdir(self.directory): os.makedirs(directory)
+            if not os.path.isdir(self.directory):
+                os.makedirs(self.directory)
             fo = open(self.filename, 'w')
         super(SingleConfig, self).write(fo)
 

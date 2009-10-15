@@ -1,5 +1,4 @@
 import os.path, pickle
-from glob import glob
 
 class Cache(object):
 
