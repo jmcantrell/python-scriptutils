@@ -1,6 +1,6 @@
-import os.path, pickle
+import os, pickle
 
-class Cache(object):
+class Cache(object): #{{{1
 
     def __init__(self, directory, **kwargs):
         self.data = dict(**kwargs)

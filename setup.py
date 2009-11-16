@@ -4,8 +4,8 @@ from setuptools import setup
 
 setup(
         name='ScriptUtils',
-        version='0.6.0',
-        description='Various small utilities for use in other scripts.',
+        version='0.6.1',
+        description='Various utilities for use in other scripts.',
         author='Jeremy Cantrell',
         author_email='jmcantrell@gmail.com',
         classifiers=[

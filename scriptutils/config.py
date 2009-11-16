@@ -5,29 +5,26 @@ from ConfigParser import SafeConfigParser
 
 ENCODING = 'utf-8'
 
-# FUNCTIONS {{{1
-
-def split(value, encoding=None): #{{{2
+def split(value, encoding=None): #{{{1
     if not encoding: encoding = ENCODING
     reader = csv.reader([encode(value, encoding)], dialect=ConfigDialect)
     return [v.strip().decode(encoding) for v in tuple(reader)[0]]
 
-def join(values, encoding=None): #{{{2
+def join(values, encoding=None): #{{{1
     if not encoding: encoding = ENCODING
     strbuf = StringIO()
     writer = csv.writer(strbuf, dialect=ConfigDialect)
     writer.writerow(encode(values, encoding))
     return decode(strbuf.getvalue().strip(), encoding)
 
+#}}}1
 
-# CLASSES {{{1
-
-class ConfigSectionError(Exception): #{{{2
+class ConfigSectionError(Exception): #{{{1
     pass
 
 
 
-class ConfigDialect(csv.Dialect): #{{{2
+class ConfigDialect(csv.Dialect): #{{{1
 
     delimiter = ','
     doublequote = False
@@ -39,7 +36,7 @@ class ConfigDialect(csv.Dialect): #{{{2
 
 
 
-class Config(object): #{{{2
+class Config(object): #{{{1
 
     def __init__(self, defaults=None, encoding=None):
         self.encoding = encoding
@@ -128,7 +125,7 @@ class Config(object): #{{{2
 
 
 
-class SingleConfig(Config): #{{{2
+class SingleConfig(Config): #{{{1
 
     def __init__(self, filename, base=None, **kwargs):
         self.filename = filename
@@ -153,7 +150,7 @@ class SingleConfig(Config): #{{{2
 
 
 
-class SimpleConfig(object): #{{{2
+class SimpleConfig(object): #{{{1
 
     def __init__(self, filename, base=None, main=None, **kwargs):
         self.main = main or 'app:main'
