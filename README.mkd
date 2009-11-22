@@ -1,3 +1,16 @@
+ScriptUtils is a collection of utilities intended to make writing scripts
+simpler. It consists of three modules (cache, config, options).
+
+scriptutils.config
+------------------
+
+This module provides classes for some of the more common configuration file
+scenarios.
+
+
+Installation
+------------
+
 If you have setuptools installed, you can install ScriptUtils with:
 
     easy_install ScriptUtils
