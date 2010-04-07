@@ -6,6 +6,13 @@ class Cache(object): #{{{1
         self.data = dict(**kwargs)
         self.directory = directory
 
+    def __contains__(self, key):
+        if key in self.data:
+            return True
+        if os.path.isfile(self._filename(key)):
+            return True
+        return False
+
     def __delitem__(self, key):
         if key in self.data:
             del(self.data[key])
