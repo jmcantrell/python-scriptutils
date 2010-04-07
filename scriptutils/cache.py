@@ -18,6 +18,8 @@ class Cache(object): #{{{1
             fn = self._filename(key)
             if os.path.isfile(fn):
                 self.data[key] = pickle.load(open(fn, 'rb'))
+            else:
+                self.data[key] = None
         return self.data[key]
 
     def __setitem__(self, key, value):
@@ -27,10 +29,9 @@ class Cache(object): #{{{1
         return os.path.join(self.directory, '%s.pkl' % key)
 
     def get(self, key, default=None):
-        try:
-            return self[key]
-        except KeyError:
-            return default
+        if key not in self:
+            self[key] = default
+        return self[key]
 
     def set(self, key, value):
         self[key] = value
@@ -39,5 +40,4 @@ class Cache(object): #{{{1
         if not os.path.isdir(self.directory):
             os.makedirs(self.directory)
         for key, value in self.data.items():
-            if not value: continue
             pickle.dump(value, open(self._filename(key), 'wb'))
