@@ -1,1 +1,1 @@
-__all__ = ['cache', 'config', 'options']
+__all__ = ['cache', 'config', 'options', 'terminal']
