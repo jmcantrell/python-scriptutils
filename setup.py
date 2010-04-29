@@ -12,7 +12,7 @@ setup(
             'Development Status :: 4 - Beta',
             'Environment :: Console',
             'Intended Audience :: Developers',
-            'License :: OSI Approved :: GNU General Public License (GPL)',
+            'License :: OSI Approved :: BSD License',
             'Natural Language :: English',
             'Operating System :: OS Independent',
             'Programming Language :: Python',
