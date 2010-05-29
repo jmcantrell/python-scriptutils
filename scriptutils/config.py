@@ -38,9 +38,9 @@ class ConfigDialect(csv.Dialect): #{{{1
 
 class Config(object): #{{{1
 
-    def __init__(self, defaults=None, encoding=ENCODING):
+    def __init__(self, defaults=None, encoding=ENCODING, parser=SafeConfigParser):
         self.encoding = encoding
-        self.parser = SafeConfigParser(defaults)
+        self.parser = parser(defaults)
 
     def encode(self, value):
         return encode(value, self.encoding)
