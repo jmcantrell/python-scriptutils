@@ -6,7 +6,7 @@ class Options(object, OptionParser):
         if not usage: usage = 'Usage: %prog [options]'
         if args: usage += ' %s' % args.strip()
         if not width: width = 45
-        super(Options, self).__init__()
+        object.__init__(self)
         OptionParser.__init__(self, usage, add_help_option=None, formatter=IndentedHelpFormatter(max_help_position=width))
         self.add_option('-h', '--help', action='help', help='Show this help message and exit.')
 
