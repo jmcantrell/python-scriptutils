@@ -2,18 +2,20 @@ from getpass import getpass
 from unicodeutils import decode
 from pathutils import condense
 
-from . import chunks, truth, zip_pad
 from . import ENCODING, INTERACTIVE, TERMINAL
+from .utils import chunks, truth, zip_pad
+from .messages import error_message, warn_message
 
-def input(prompt='Enter value', secret=False, default=None, check=False): #{{{1
+def input(prompt='Enter value', secret=False, default=None, check=False, error=None, warn=None): #{{{1
+    if secret: default = None
     if check and not INTERACTIVE:
-        if secret: return u''
         return default or u''
     prompt = condense(prompt)
     default = decode(default, encoding=ENCODING)
     getter = getpass if secret else raw_input
-    if not secret and default is not None:
-        prompt += " [%s]" % default
+    if default: prompt += " [%s]" % default
+    if warn:    prompt += " (%s)" % warn_message(message=warn)
+    if error:   prompt += " (%s)" % error_message(message=error)
     try:
         if prompt:
             reply = getter(prompt.strip()+': ')
@@ -22,8 +24,7 @@ def input(prompt='Enter value', secret=False, default=None, check=False): #{{{1
     except:
         reply = ''
     reply = decode(reply, encoding=ENCODING)
-    if not (len(reply) or secret):
-        reply = default
+    if not len(reply): reply = default
     return reply.strip()
 
 def input_cast(cast=str, **kwargs): #{{{1
@@ -34,7 +35,9 @@ def input_cast(cast=str, **kwargs): #{{{1
         try:
             value = cast(reply)
         except:
+            kwargs['error'] = "Value must be of type '%s'" % cast.__name__
             continue
+        return value
 
 def input_bool(**kwargs): #{{{1
     if truth(input(**kwargs)): return True
@@ -46,8 +49,12 @@ def input_float(minval=None, maxval=None, **kwargs): #{{{1
     while True:
         value = input_cast(cast=cast, **kwargs)
         if value is None: return None
-        if minval is not None and value < minval: continue
-        if maxval is not None and value > maxval: continue
+        if minval is not None and value < minval:
+            kwargs['error'] = 'Value must be no less than %s' % minval
+            continue
+        if maxval is not None and value > maxval:
+            kwargs['error'] = 'Value must be no greater than %s' % maxval
+            continue
         return value
 
 def input_int(**kwargs): #{{{1

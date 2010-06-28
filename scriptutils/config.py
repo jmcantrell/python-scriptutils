@@ -6,11 +6,13 @@ from ConfigParser import SafeConfigParser
 ENCODING = 'utf-8'
 
 def split(value, encoding=None): #{{{1
+    """Splits config value into a list."""
     if not encoding: encoding = ENCODING
     reader = csv.reader([encode(value, encoding)], dialect=ConfigDialect)
     return [v.strip().decode(encoding) for v in tuple(reader)[0]]
 
 def join(values, encoding=None): #{{{1
+    """Joins a list into a config value."""
     if not encoding: encoding = ENCODING
     strbuf = StringIO()
     writer = csv.writer(strbuf, dialect=ConfigDialect)
@@ -26,6 +28,8 @@ class ConfigSectionError(Exception): #{{{1
 
 class ConfigDialect(csv.Dialect): #{{{1
 
+    """CSV dialect for value lists."""
+
     delimiter = ','
     doublequote = False
     escapechar = '\\'
@@ -37,6 +41,11 @@ class ConfigDialect(csv.Dialect): #{{{1
 
 
 class Config(object): #{{{1
+
+    """A wrapper around ConfigParser that provides unicode names/values.
+
+    It also provides some added functionality like getting/setting lists.
+    """
 
     def __init__(self, defaults=None, encoding=ENCODING, parser=SafeConfigParser):
         self.encoding = encoding
@@ -127,6 +136,8 @@ class Config(object): #{{{1
 
 class SingleConfig(Config): #{{{1
 
+    """Config that represents a single file."""
+
     def __init__(self, filename, base=None, **kwargs):
         self.filename = filename
         self.base = base or {}
@@ -151,6 +162,8 @@ class SingleConfig(Config): #{{{1
 
 
 class SimpleConfig(object): #{{{1
+
+    """Config that only provides a main section (for simple cases)."""
 
     def __init__(self, filename, base=None, main=None, **kwargs):
         self.main = main or 'app:main'
