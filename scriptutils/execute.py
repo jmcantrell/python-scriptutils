@@ -1,4 +1,4 @@
-import os, shlex
+import os, shlex, sys
 from subprocess import PIPE, Popen
 
 def in_directory(f, directory=None):
@@ -8,17 +8,23 @@ def in_directory(f, directory=None):
         prev_cwd = os.getcwd()
         os.chdir(d)
         try:
-            f(*args, **kwargs)
+            return f(*args, **kwargs)
         finally:
             os.chdir(prev_cwd)
     return new_f
 
 @in_directory
-def execute(command, stdin=None, directory=None):
-    """Run a command with common options."""
+def system(command, **kwargs):
+    kwargs.setdefault('stdout', sys.stdout)
+    kwargs.setdefault('stderr', sys.stderr)
+    return execute(command, **kwargs)[0]
+
+@in_directory
+def execute(command, **kwargs):
     if not isinstance(command, (list, tuple)):
         command = shlex.split(command)
-    if not stdin:
-        stdin = PIPE
-    p = Popen(command, stdin=stdin, stdout=PIPE, stderr=PIPE)
-    return p.communicate()  #==> (stdout, stderr)
+    kwargs.setdefault('stdout', PIPE)
+    kwargs.setdefault('stderr', PIPE)
+    p = Popen(command, **kwargs)
+    e, o = p.communicate()
+    return p.returncode, o, e
