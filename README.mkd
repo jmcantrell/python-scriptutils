@@ -7,13 +7,12 @@ scriptutils.config
 This module provides classes for some of the more common configuration file
 scenarios.
 
-
 Installation
 ------------
 
-If you have setuptools installed, you can install ScriptUtils with:
+You should install ScriptUtils with pip:
 
-    easy_install ScriptUtils
+    pip install ScriptUtils
 
 Otherwise, you'll have to download the package and run:
 
