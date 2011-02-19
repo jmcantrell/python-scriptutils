@@ -7,18 +7,18 @@ class Terminal(object):
     A class that can be used to portably generate formatted output to
     a terminal.
 
-    `TerminalController` defines a set of instance variables whose
+    `Terminal` defines a set of instance variables whose
     values are initialized to the control sequence necessary to
     perform a given action.  These can be simply included in normal
     output to the terminal:
 
-        >>> term = TerminalController()
+        >>> term = Terminal()
         >>> print 'This is '+term.GREEN+'green'+term.NORMAL
 
     Alternatively, the `render()` method can used, which replaces
     '${action}' with the string required to perform 'action':
 
-        >>> term = TerminalController()
+        >>> term = Terminal()
         >>> print term.render('This is ${GREEN}green${NORMAL}')
 
     If the terminal doesn't support a given action, then the value of
@@ -29,7 +29,7 @@ class Terminal(object):
     given action by simply testing the truth value of the
     corresponding instance variable:
 
-        >>> term = TerminalController()
+        >>> term = Terminal()
         >>> if term.CLEAR_SCREEN:
         ...     print 'This terminal supports clearning the screen.'
 
@@ -81,7 +81,7 @@ class Terminal(object):
 
     def __init__(self, stream=sys.stdout):
         """
-        Create a `TerminalController` and initialize its attributes
+        Create a `Terminal` and initialize its attributes
         with appropriate values for the current terminal.
         `stream` is the stream that will be used for terminal
         output; if this stream is not a tty, then the terminal is

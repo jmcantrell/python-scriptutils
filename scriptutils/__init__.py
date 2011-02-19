@@ -1,4 +1,4 @@
-__all__ = ['cache', 'config', 'input', 'messages', 'options', 'terminal']
+__all__ = ['arguments', 'cache', 'config', 'input', 'messages', 'terminal']
 
 from .terminal import Terminal
 

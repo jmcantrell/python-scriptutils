@@ -1,11 +1,5 @@
-ScriptUtils is a collection of utilities intended to make writing scripts
-simpler. It consists of three modules (cache, config, options).
-
-scriptutils.config
-------------------
-
-This module provides classes for some of the more common configuration file
-scenarios.
+ScriptUtils is a collection of utilities intended to make writing command-line
+scripts simpler.
 
 Installation
 ------------

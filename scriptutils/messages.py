@@ -55,6 +55,6 @@ def warn(check=False, **kwargs):
 def error_message(message='An error has occurred.'):
     return tag_message(red('ERROR:'), message)
 
-def error(**kwargs):
+def error(check=False, **kwargs):
     if check and not VERBOSE: return
     print >>sys.stderr, error_message(**kwargs)
