@@ -5,31 +5,31 @@ from unicodeutils import encode
 from . import ENCODING, TERMINAL, VERBOSE
 
 def pack(t, text):
-    return ''.join([t, text, TERMINAL.NORMAL])
+    return ''.join([t, text, TERMINAL.RESET])
 
 def black(text):
-    return pack(TERMINAL.BLACK, text)
+    return pack(TERMINAL.FG_BLACK, text)
 
 def blue(text):
-    return pack(TERMINAL.BLUE, text)
+    return pack(TERMINAL.FG_BLUE, text)
 
 def green(text):
-    return pack(TERMINAL.GREEN, text)
+    return pack(TERMINAL.FG_GREEN, text)
 
 def cyan(text):
-    return pack(TERMINAL.CYAN, text)
+    return pack(TERMINAL.FG_CYAN, text)
 
 def red(text):
-    return pack(TERMINAL.RED, text)
+    return pack(TERMINAL.FG_RED, text)
 
 def magenta(text):
-    return pack(TERMINAL.MAGENTA, text)
+    return pack(TERMINAL.FG_MAGENTA, text)
 
 def yellow(text):
-    return pack(TERMINAL.YELLOW, text)
+    return pack(TERMINAL.FG_YELLOW, text)
 
 def white(text):
-    return pack(TERMINAL.WHITE, text)
+    return pack(TERMINAL.FG_WHITE, text)
 
 def bold(text):
     return pack(TERMINAL.BOLD, text)
