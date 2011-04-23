@@ -73,9 +73,9 @@ class Terminal(object):
             self.FX[name] = self.tigetstr(name)
         return self.FX[name]
 
-    def tparm(self, parm, name):
+    def tparm(self, parm, num):
         if not CURSES: return ''
-        return curses.tparm(parm, name) or ''
+        return curses.tparm(parm, num) or ''
 
     def tigetnum(self, cap):
         if not CURSES: return 0
