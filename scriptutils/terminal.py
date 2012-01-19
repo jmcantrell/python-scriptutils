@@ -1,10 +1,12 @@
 import re
 
 try:
-    import curses; curses.setupterm()
+    import curses
+    curses.setupterm()
     CURSES = True
 except:
     CURSES = False
+
 
 class Terminal(object):
 
@@ -52,7 +54,8 @@ class Terminal(object):
 
         for mode in 'FG', 'BG':
             parm = self.tigetstr('seta%s' % mode[0].lower())
-            if not parm: continue
+            if not parm:
+                continue
             setattr(self, 'set_%s' % mode.lower(), parm)
             for n, color in enumerate(self.COLOR_NAMES):
                 attr = '%s_%s' % (mode.upper(), color)
@@ -74,11 +77,13 @@ class Terminal(object):
         return self.FX[name]
 
     def tparm(self, parm, num):
-        if not CURSES: return ''
+        if not CURSES:
+            return ''
         return curses.tparm(parm, num) or ''
 
     def tigetnum(self, cap):
-        if not CURSES: return 0
+        if not CURSES:
+            return 0
         return curses.tigetnum(cap)
 
     def tigetstr(self, cap):
@@ -87,5 +92,6 @@ class Terminal(object):
         For any modern terminal, we should be able to just ignore
         these, so strip them out.
         """
-        if not CURSES: return ''
+        if not CURSES:
+            return ''
         return re.sub(r'\$<\d+>[/*]?', '', curses.tigetstr(cap) or '')

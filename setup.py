@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
         name='ScriptUtils',
-        version='0.9.0',
+        version='0.9.1',
         description='Various utilities for use in other scripts.',
         author='Jeremy Cantrell',
         author_email='jmcantrell@gmail.com',

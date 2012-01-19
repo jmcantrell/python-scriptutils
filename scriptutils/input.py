@@ -6,28 +6,36 @@ from . import ENCODING, INTERACTIVE, TERMINAL
 from .utils import chunks, truth, zip_pad
 from .messages import error_message, warn_message
 
-def input(prompt='Enter value', secret=False, default=None, check=False, error=None, warn=None): #{{{1
-    if secret: default = None
+
+def input(prompt='Enter value', secret=False,  # {{{1
+        default=None, check=False, error=None, warn=None):
+    if secret:
+        default = None
     if check and not INTERACTIVE:
         return default or u''
     prompt = condense(prompt)
     default = decode(default, encoding=ENCODING)
     getter = getpass if secret else raw_input
-    if default: prompt += " [%s]" % default
-    if warn:    prompt += " (%s)" % warn_message(message=warn)
-    if error:   prompt += " (%s)" % error_message(message=error)
+    if default:
+        prompt += " [%s]" % default
+    if warn:
+        prompt += " (%s)" % warn_message(message=warn)
+    if error:
+        prompt += " (%s)" % error_message(message=error)
     try:
         if prompt:
-            reply = getter(prompt.strip()+': ')
+            reply = getter(prompt.strip() + ': ')
         else:
             reply = getter()
     except:
         reply = ''
     reply = decode(reply, encoding=ENCODING)
-    if not len(reply): reply = default
+    if not len(reply):
+        reply = default
     return reply.strip()
 
-def input_cast(cast=str, **kwargs): #{{{1
+
+def input_cast(cast=str, **kwargs):  # {{{1
     while True:
         reply = input(**kwargs)
         if not len(reply):
@@ -39,16 +47,20 @@ def input_cast(cast=str, **kwargs): #{{{1
             continue
         return value
 
-def input_bool(**kwargs): #{{{1
-    if truth(input(**kwargs)): return True
+
+def input_bool(**kwargs):  # {{{1
+    if truth(input(**kwargs)):
+        return True
     return False
 
-def input_float(minval=None, maxval=None, **kwargs): #{{{1
+
+def input_float(minval=None, maxval=None, **kwargs):  # {{{1
     kwargs.setdefault('prompt', 'Enter a float')
     cast = kwargs.get('cast', float)
     while True:
         value = input_cast(cast=cast, **kwargs)
-        if value is None: return None
+        if value is None:
+            return None
         if minval is not None and value < minval:
             kwargs['error'] = 'Value must be no less than %s' % minval
             continue
@@ -57,13 +69,16 @@ def input_float(minval=None, maxval=None, **kwargs): #{{{1
             continue
         return value
 
-def input_int(**kwargs): #{{{1
+
+def input_int(**kwargs):  # {{{1
     kwargs['cast'] = int
     kwargs.setdefault('prompt', 'Enter an integer')
     return input_float(**kwargs)
 
-def input_lines(prompt='Enter values', check=False): #{{{1
-    if check and not INTERACTIVE: return None
+
+def input_lines(prompt='Enter values', check=False):  # {{{1
+    if check and not INTERACTIVE:
+        return None
     lines = []
     print '%s (one per line):' % condense(prompt)
     while True:
@@ -74,22 +89,28 @@ def input_lines(prompt='Enter values', check=False): #{{{1
         except KeyboardInterrupt:
             return None
 
-def question(**kwargs): #{{{1
+
+def question(**kwargs):  # {{{1
     kwargs.setdefault('prompt', 'Are you sure you want to proceed?')
     if 'default' in kwargs:
         kwargs['default'] = 'y' if truth(kwargs['default']) else 'n'
     return input_bool(**kwargs)
 
-def choice(choices, prompt='Select from these choices'): #{{{1
-    if not INTERACTIVE: return None
-    print prompt+':'
+
+def choice(choices, prompt='Select from these choices'):  # {{{1
+    if not INTERACTIVE:
+        return None
+    print prompt + ':'
     print choice_list
     reply = input_int(prompt='#', minval=1, maxval=len(choices))
-    if reply is None: return None
+    if reply is None:
+        return None
     return choices[reply]
 
-def choice_list(choices): #{{{1
-    if not len(choices): return
+
+def choice_list(choices):  # {{{1
+    if not len(choices):
+        return
     choices = [str(i) for i in choices]
     c_len = len(choices)
     m_elm = len(str(max(choices, key=len)))
@@ -104,12 +125,14 @@ def choice_list(choices): #{{{1
         cols = 1
     grid = list(chunks(range(len(choices)), rows))
     grid_max = [len(str(i[-1])) for i in grid]
+
     def f(m, ln, n, li, i):
         s = '%*s) %-*s' % (ln, n, li, i)
         return '%-*s' % (m, s)
+
     for row in zip_pad(*grid):
         print ''.join(
-                f(m_col, grid_max[i], n+1, m_elm, choices[n])
+                f(m_col, grid_max[i], n + 1, m_elm, choices[n])
                 for i, n in enumerate(row)
                 if n is not None
                 )

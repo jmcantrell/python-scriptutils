@@ -1,5 +1,6 @@
 from argparse import ArgumentParser, HelpFormatter
 
+
 class Arguments(ArgumentParser):
 
     def __init__(self, width=None, **kwargs):

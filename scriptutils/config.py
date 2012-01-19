@@ -1,19 +1,24 @@
-import os, csv
+import os
+import csv
 from StringIO import StringIO
 from unicodeutils import encode, decode, is_list
 from ConfigParser import SafeConfigParser
 
 ENCODING = 'utf-8'
 
-def split(value, encoding=None): #{{{1
+
+def split(value, encoding=None):  # {{{1
     """Splits config value into a list."""
-    if not encoding: encoding = ENCODING
+    if not encoding:
+        encoding = ENCODING
     reader = csv.reader([encode(value, encoding)], dialect=ConfigDialect)
     return [v.strip().decode(encoding) for v in tuple(reader)[0]]
 
-def join(values, encoding=None): #{{{1
+
+def join(values, encoding=None):  # {{{1
     """Joins a list into a config value."""
-    if not encoding: encoding = ENCODING
+    if not encoding:
+        encoding = ENCODING
     strbuf = StringIO()
     writer = csv.writer(strbuf, dialect=ConfigDialect)
     writer.writerow(encode(values, encoding))
@@ -21,12 +26,12 @@ def join(values, encoding=None): #{{{1
 
 #}}}1
 
-class ConfigSectionError(Exception): #{{{1
+
+class ConfigSectionError(Exception):  # {{{1
     pass
 
 
-
-class ConfigDialect(csv.Dialect): #{{{1
+class ConfigDialect(csv.Dialect):  # {{{1
 
     """CSV dialect for value lists."""
 
@@ -39,15 +44,15 @@ class ConfigDialect(csv.Dialect): #{{{1
     skipinitialspace = True
 
 
-
-class Config(object): #{{{1
+class Config(object):  # {{{1
 
     """A wrapper around ConfigParser that provides unicode names/values.
 
     It also provides some added functionality like getting/setting lists.
     """
 
-    def __init__(self, defaults=None, encoding=ENCODING, parser=SafeConfigParser):
+    def __init__(self, defaults=None,
+            encoding=ENCODING, parser=SafeConfigParser):
         self.encoding = encoding
         self.parser = parser(defaults)
 
@@ -70,7 +75,8 @@ class Config(object): #{{{1
         return self.parser.has_section(self.encode(section))
 
     def has_option(self, section, option):
-        return self.parser.has_option(self.encode(section), self.encode(option))
+        return self.parser.has_option(self.encode(section),
+                self.encode(option))
 
     def options(self, section):
         return self.decode(self.parser.options(self.encode(section)))
@@ -84,8 +90,10 @@ class Config(object): #{{{1
     def getraw(self, section, option, default=None, getter=None):
         section = self.encode(section)
         option = self.encode(option)
-        if not getter: getter = self.parser.get
-        if not self.has_option(section, option): return default
+        if not getter:
+            getter = self.parser.get
+        if not self.has_option(section, option):
+            return default
         return getter(section, option)
 
     def get(self, section, option, default=None):
@@ -101,16 +109,20 @@ class Config(object): #{{{1
         return self.getraw(section, option, default, self.parser.getfloat)
 
     def getlist(self, section, option, default=None, convert=None):
-        if not self.has_option(section, option): return default
+        if not self.has_option(section, option):
+            return default
         values = split(self.get(section, option), self.encoding)
-        if convert: return [convert(v) for v in values]
+        if convert:
+            return [convert(v) for v in values]
         return values
 
     def set(self, section, option, value):
         section = self.encode(section)
         value = self.encode(value)
-        if is_list(value): value = join(value, self.encoding)
-        if not self.has_section(section): self.add_section(section)
+        if is_list(value):
+            value = join(value, self.encoding)
+        if not self.has_section(section):
+            self.add_section(section)
         self.parser.set(section, option, value)
 
     def write(self, fo):
@@ -133,8 +145,7 @@ class Config(object): #{{{1
         return [(o, self.get(section, o)) for o in self.options(section)]
 
 
-
-class SingleConfig(Config): #{{{1
+class SingleConfig(Config):  # {{{1
 
     """Config that represents a single file."""
 
@@ -160,15 +171,15 @@ class SingleConfig(Config): #{{{1
         super(SingleConfig, self).write(fo)
 
 
-
-class SimpleConfig(object): #{{{1
+class SimpleConfig(object):  # {{{1
 
     """Config that only provides a main section (for simple cases)."""
 
     def __init__(self, filename, base=None, main=None, **kwargs):
         self.main = main or 'app:main'
         self.base = base or {}
-        self.config = SingleConfig(filename, base={self.main: self.base}, **kwargs)
+        self.config = SingleConfig(filename,
+                base={self.main: self.base}, **kwargs)
         self.filename = self.config.filename
         self.directory = self.config.directory
         self.encoding = self.config.encoding
