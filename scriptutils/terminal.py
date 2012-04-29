@@ -8,6 +8,10 @@ except:
     CURSES = False
 
 
+def shellquote(s):
+    return "'" + s.replace("'", "'\\''") + "'"
+
+
 class Terminal(object):
 
     COLS = None
