@@ -57,12 +57,12 @@ class Terminal(object):
             setattr(self, attr, self.tigetstr(cap) or '')
 
         for mode in 'FG', 'BG':
-            parm = self.tigetstr('seta%s' % mode[0].lower())
+            parm = self.tigetstr('seta{}'.format(mode[0].lower()))
             if not parm:
                 continue
-            setattr(self, 'set_%s' % mode.lower(), parm)
+            setattr(self, 'set_{}'.format(mode.lower()), parm)
             for n, color in enumerate(self.COLOR_NAMES):
-                attr = '%s_%s' % (mode.upper(), color)
+                attr = '{}_{}'.format(mode.upper(), color)
                 setattr(self, attr, self.tparm(parm, n))
 
     def fg(self, num):
