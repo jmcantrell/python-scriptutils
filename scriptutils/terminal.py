@@ -58,8 +58,6 @@ class Terminal(object):
 
         for mode in 'FG', 'BG':
             parm = self.tigetstr('seta{}'.format(mode[0].lower()))
-            if not parm:
-                continue
             setattr(self, 'set_{}'.format(mode.lower()), parm)
             for n, color in enumerate(self.COLOR_NAMES):
                 attr = '{}_{}'.format(mode.upper(), color)
