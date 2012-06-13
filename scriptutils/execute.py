@@ -1,6 +1,4 @@
-import os
-import shlex
-import sys
+import os, shlex, sys
 from subprocess import PIPE, Popen
 
 

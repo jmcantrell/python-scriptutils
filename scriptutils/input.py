@@ -7,8 +7,7 @@ from .utils import chunks, truth, zip_pad
 from .messages import error_message, warn_message
 
 
-def input(prompt='Enter value', secret=False,  # {{{1
-        default=None, check=False, error=None, warn=None):
+def input(prompt='Enter value', secret=False, default=None, check=False, error=None, warn=None):  # {{{1
     if secret:
         default = None
     if check and not INTERACTIVE:

@@ -24,14 +24,14 @@ class Terminal(object):
     FX = {}
 
     CAPS = {
-            'RESET':       'sgr0',
-            'BOLD':        'bold',
-            'DIM':         'dim',
-            'STANDOUT':    'smso',
-            'ITALIC':      'sitm',
-            'UNDERLINE':   'smul',
-            'BLINK':       'blink',
-            'REVERSE':     'rev',
+            'RESET': 'sgr0',
+            'BOLD': 'bold',
+            'DIM': 'dim',
+            'STANDOUT': 'smso',
+            'ITALIC': 'sitm',
+            'UNDERLINE': 'smul',
+            'BLINK': 'blink',
+            'REVERSE': 'rev',
             }
 
     COLOR_NAMES = [

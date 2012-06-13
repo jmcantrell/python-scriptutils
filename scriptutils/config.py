@@ -24,8 +24,6 @@ def join(values, encoding=None):  # {{{1
     writer.writerow(encode(values, encoding))
     return decode(strbuf.getvalue().strip(), encoding)
 
-#}}}1
-
 
 class ConfigSectionError(Exception):  # {{{1
     pass
@@ -51,8 +49,7 @@ class Config(object):  # {{{1
     It also provides some added functionality like getting/setting lists.
     """
 
-    def __init__(self, defaults=None,
-            encoding=ENCODING, parser=SafeConfigParser):
+    def __init__(self, defaults=None, encoding=ENCODING, parser=SafeConfigParser):
         self.encoding = encoding
         self.parser = parser(defaults)
 
@@ -75,8 +72,7 @@ class Config(object):  # {{{1
         return self.parser.has_section(self.encode(section))
 
     def has_option(self, section, option):
-        return self.parser.has_option(self.encode(section),
-                self.encode(option))
+        return self.parser.has_option(self.encode(section), self.encode(option))
 
     def options(self, section):
         return self.decode(self.parser.options(self.encode(section)))
@@ -178,8 +174,7 @@ class SimpleConfig(object):  # {{{1
     def __init__(self, filename, base=None, main=None, **kwargs):
         self.main = main or 'app:main'
         self.base = base or {}
-        self.config = SingleConfig(filename,
-                base={self.main: self.base}, **kwargs)
+        self.config = SingleConfig(filename, base={self.main: self.base}, **kwargs)
         self.filename = self.config.filename
         self.directory = self.config.directory
         self.encoding = self.config.encoding
