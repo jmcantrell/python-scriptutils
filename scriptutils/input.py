@@ -131,7 +131,7 @@ def choice_list(choices):  # {{{1
 
     for row in zip_pad(*grid):
         print ''.join(
-                f(m_col, grid_max[i], n + 1, m_elm, choices[n])
-                for i, n in enumerate(row)
-                if n is not None
-                )
+            f(m_col, grid_max[i], n + 1, m_elm, choices[n])
+            for i, n in enumerate(row)
+            if n is not None
+        )

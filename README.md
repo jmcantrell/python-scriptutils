@@ -6,7 +6,7 @@ Installation
 
 You should install ScriptUtils with pip:
 
-    pip install ScriptUtils
+    pip install scriptutils
 
 Otherwise, you'll have to download the package and run:
 
